@@ -1,8 +1,8 @@
-{ self, lib, pkgs, libPath ? null, ... }:
+{ self, lib, pkgs, libPath ? ./., ... }:
 
 let
   inherit (builtins) mapAttrs intersectAttrs functionArgs getEnv fromJSON;
-  inherit (lib) attrValues foldr foldl optionalAttrs;
+  inherit (lib) attrValues foldr foldl;
 
   # mapModules gets special treatment because it's needed early!
   inherit (attrs) attrsToList mergeAttrs';
@@ -42,9 +42,8 @@ let
     ${b.name} = b.value (intersectAttrs (functionArgs b.value) a);
   };
   # FIXME: Lexicographical loading can cause race conditions. Sort them?
-  libModules = sortLibsByDeps (mapModules ./. import);
-  extraLibModules = optionalAttrs (libPath != null) (sortLibsByDeps (mapModules libPath import));
-  libs = foldl libConcat { inherit lib pkgs; self = libs; } ((attrsToList libModules) ++ (attrsToList extraLibModules));
+  libModules = sortLibsByDeps (mapModules libPath import);
+  libs = foldl libConcat { inherit lib pkgs; self = libs; } (attrsToList libModules);
 in
   # The flattened tree is appended to make the namespaced endpoints optional,
   # and because namespaces are useful for inherit'ed let-bindings. In other
