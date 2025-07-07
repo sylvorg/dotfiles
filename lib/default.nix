@@ -1,4 +1,4 @@
-{ self, lib, pkgs, libPath, ... }:
+{ self, lib, pkgs, libPath ? ./., ... }:
 
 let
   inherit (builtins) mapAttrs intersectAttrs functionArgs getEnv fromJSON;
