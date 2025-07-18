@@ -7,7 +7,7 @@
 with builtins;
 with lib;
 rec {
-  inherit pkgs;
+  packages = pkgs;
 
   boolTo = bool: trueStr: falseStr:
     if (bool == false || bool == null || bool == 0)
