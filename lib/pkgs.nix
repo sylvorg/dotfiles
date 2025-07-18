@@ -7,6 +7,8 @@
 with builtins;
 with lib;
 rec {
+  inherit pkgs;
+
   boolTo = bool: trueStr: falseStr:
     if (bool == false || bool == null || bool == 0)
     then falseStr
